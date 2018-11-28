@@ -70,9 +70,10 @@ public class CategoricalCorrelation extends Configured implements Tool {
 			        nonZeroDelayCount++;
 			}
 			result.set(zeroDelayCount);
-			ansKey.set(key.toString());
+			ansKey.set(key.toString() + ",0");
 			context.write(ansKey, result);
 			result.set(nonZeroDelayCount);
+            ansKey.set(key.toString() + ",1");
 			context.write(ansKey, result);
 		}
 	}
