@@ -1,6 +1,8 @@
 package AttributeAnalysis;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
@@ -16,23 +18,39 @@ import org.apache.hadoop.util.ToolRunner;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-public class CategoricalCorrelation extends Configured implements Tool {
-	private static final Logger logger = LogManager.getLogger(CategoricalCorrelation.class);
+public class FrequencyOfDomainValues extends Configured implements Tool {
+	private static final Logger logger = LogManager.getLogger(FrequencyOfDomainValues.class);
 
-	public static class CommaTokenizingMapper extends Mapper<Object, Text, IntTextPair, BooleanWritable> {
+	public static class CommaTokenizingMapper extends Mapper<Object, Text, IntTextPair, IntWritable> {
+
+	    private HashMap<IntTextPair, Integer> mapping;
+	    private IntWritable value = new IntWritable();
+
+	    public void setup(Context context) throws IOException, InterruptedException{
+	        mapping = new HashMap<IntTextPair, Integer>();
+        }
 
         @Override
 		public void map(final Object key, final Text value, final Context context) throws IOException, InterruptedException {
             String link[] = value.toString().split(",");
-            if(link[link.length-1].length() != 0){
+            for(int i = 0; i < link.length; i++){
                 IntTextPair ansKey = new IntTextPair();
-                BooleanWritable ansValue = new BooleanWritable(Integer.parseInt(link[link.length-1]) == 0);
-                for(int i = 0; i < link.length-1; i++){
-                    ansKey.set(i, link[i]);
-                    context.write(ansKey, ansValue);
+                ansKey.set(i, link[i]);
+                if(mapping.containsKey(ansKey)){
+                    mapping.put(ansKey, mapping.get(ansKey) + 1);
+                }
+                else{
+                    mapping.put(ansKey, 1);
                 }
             }
 		}
+
+        protected void cleanup(Context context) throws IOException, InterruptedException {
+	        for(Map.Entry<IntTextPair, Integer> entry : mapping.entrySet()){
+	            value.set(entry.getValue());
+	            context.write(entry.getKey(), value);
+            }
+        }
 	}
 
     public static class KeyComparator extends WritableComparator {
@@ -55,25 +73,18 @@ public class CategoricalCorrelation extends Configured implements Tool {
     Reduces a set of values of a single key
     to a single key-value pair
 	 */
-	public static class AttributeDelayReducer extends Reducer<IntTextPair, BooleanWritable, Text, IntWritable> {
+	public static class AttributeFrequencyReducer extends Reducer<IntTextPair, IntWritable, Text, IntWritable> {
 		private final IntWritable result = new IntWritable();
         private final Text ansKey = new Text();
 
 		@Override
-		public void reduce(final IntTextPair key, final Iterable<BooleanWritable> values, final Context context) throws IOException, InterruptedException {
-			int zeroDelayCount = 0;
-			int nonZeroDelayCount = 0;
-			for (final BooleanWritable val : values) {
-			    if(val.get())
-			        zeroDelayCount++;
-			    else
-			        nonZeroDelayCount++;
+		public void reduce(final IntTextPair key, final Iterable<IntWritable> values, final Context context) throws IOException, InterruptedException {
+			int count = 0;
+			for (final IntWritable val : values) {
+			    count+=val.get();
 			}
-			result.set(zeroDelayCount);
-			ansKey.set(key.toString() + ",0");
-			context.write(ansKey, result);
-			result.set(nonZeroDelayCount);
-            ansKey.set(key.toString() + ",1");
+			result.set(count);
+			ansKey.set(key.toString());
 			context.write(ansKey, result);
 		}
 	}
@@ -82,17 +93,16 @@ public class CategoricalCorrelation extends Configured implements Tool {
 	public int run(final String[] args) throws Exception {
 
 		final Configuration conf = getConf();
-		final Job job = Job.getInstance(conf, "Categorical Attributes Frequencies With Delay");
-		job.setJarByClass(CategoricalCorrelation.class);
+		final Job job = Job.getInstance(conf, "Categorical Attributes Frequencies");
+		job.setJarByClass(FrequencyOfDomainValues.class);
 		final Configuration jobConf = job.getConfiguration();
 		// Sets output delimeter for each line
 		jobConf.set("mapreduce.output.textoutputformat.separator", ",");
 
 		job.setMapperClass(CommaTokenizingMapper.class);
-		job.setReducerClass(AttributeDelayReducer.class);
-        //job.setSortComparatorClass(KeyComparator.class);
+		job.setReducerClass(AttributeFrequencyReducer.class);
         job.setMapOutputKeyClass(IntTextPair.class);
-        job.setMapOutputValueClass(BooleanWritable.class);
+        job.setMapOutputValueClass(IntWritable.class);
         job.setOutputKeyClass(Text. class);
 		job.setOutputValueClass(IntWritable.class);
 
@@ -108,7 +118,7 @@ public class CategoricalCorrelation extends Configured implements Tool {
 		}
 
 		try {
-			ToolRunner.run(new CategoricalCorrelation(), args);
+			ToolRunner.run(new FrequencyOfDomainValues(), args);
 		} catch (final Exception e) {
 			logger.error("", e);
 		}
