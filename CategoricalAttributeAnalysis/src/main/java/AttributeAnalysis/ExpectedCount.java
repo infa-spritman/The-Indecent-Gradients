@@ -7,7 +7,10 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
+
+// Generates ExpectedCounts from output of FrequencyOfDomainValues
 public class ExpectedCount {
+
     public static void main(String[] args) throws IOException {
         long totalEntries = Long.parseLong(args[1]);
         int targetIndex = Integer.parseInt(args[2]);

@@ -3,9 +3,9 @@
 # Customize these paths for your environment.
 # -----------------------------------------------------------
 hadoop.root=/Users/kooshdoctor/tools/hadoop-2.9.1
-jar.name=mr-demo-1.0.jar
+jar.name=CategoricalAttributeAnalysis-1.0.jar
 jar.path=target/${jar.name}
-job.name=twitter.CountFollowers
+job.name=AttributeAnalysis.ObservedFrequency
 local.input=input
 local.output=output
 # Pseudo-Cluster Execution
@@ -15,8 +15,8 @@ hdfs.output=output
 # AWS EMR Execution
 aws.emr.release=emr-5.17.0
 aws.region=us-east-1
-aws.input.bucket.name=kudo-ass-1-input
-aws.bucket.name=kudo-ass-1-mr-10-inst2
+aws.input.bucket.name=kudo-mr-project-input
+aws.bucket.name=kudo-mr-project-10
 aws.subnet.id=subnet-b979ffde
 aws.input=input
 aws.output=output

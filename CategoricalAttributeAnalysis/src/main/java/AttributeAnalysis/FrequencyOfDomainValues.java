@@ -18,11 +18,14 @@ import org.apache.hadoop.util.ToolRunner;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+
+// Class for generating Frequency of Domain Values of each Attribute
 public class FrequencyOfDomainValues extends Configured implements Tool {
     private static final Logger logger = LogManager.getLogger(FrequencyOfDomainValues.class);
 
     public static class CommaTokenizingMapper extends Mapper<Object, Text, IntTextPair, IntWritable> {
 
+        //
         private HashMap<IntTextPair, Integer> mapping;
         private IntWritable value = new IntWritable();
 
@@ -83,8 +86,11 @@ public class FrequencyOfDomainValues extends Configured implements Tool {
         // Sets output delimeter for each line
         jobConf.set("mapreduce.output.textoutputformat.separator", ",");
 
+        //Setting Mapper and Reducer Class
         job.setMapperClass(CommaTokenizingMapper.class);
         job.setReducerClass(AttributeFrequencyReducer.class);
+
+        //Setting MapOutputKeyClass, MapOutputValueClass, OutputKeyClass and OutputValueClass
         job.setMapOutputKeyClass(IntTextPair.class);
         job.setMapOutputValueClass(IntWritable.class);
         job.setOutputKeyClass(Text. class);

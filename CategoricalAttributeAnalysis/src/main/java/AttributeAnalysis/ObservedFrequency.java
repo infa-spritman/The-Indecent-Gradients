@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-
+// MR job for generating ObservedFrequency for each domain value of each attribute
 public class ObservedFrequency  extends Configured implements Tool {
     private static final Logger logger = LogManager.getLogger(ObservedFrequency.class);
 

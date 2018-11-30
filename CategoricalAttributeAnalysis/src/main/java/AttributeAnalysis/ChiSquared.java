@@ -38,6 +38,7 @@ public class ChiSquared {
         write.close();
     }
 
+    // Makes the observed hashmap consistent by adding cells having 0 value
     public static void completeTheHashMap(HashMap<Integer, HashMap<String, HashMap<Integer, Double>>> map){
         for(Map.Entry<Integer, HashMap<String, HashMap<Integer, Double>>> entry0: map.entrySet()){
             for(Map.Entry<String, HashMap<Integer, Double>> entry1 : entry0.getValue().entrySet()){
@@ -50,6 +51,8 @@ public class ChiSquared {
         }
     }
 
+
+    // Reads the observed frequency output and expected frequency output file
     public static HashMap<Integer, HashMap<String, HashMap<Integer, Double>>> readFile(String fileAddress) throws IOException {
         HashMap<Integer, HashMap<String, HashMap<Integer, Double>>> ans = new HashMap<>();
 
