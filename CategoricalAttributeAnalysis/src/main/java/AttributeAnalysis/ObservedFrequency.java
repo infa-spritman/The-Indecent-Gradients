@@ -3,7 +3,10 @@ package AttributeAnalysis;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.Tool;
@@ -11,9 +14,26 @@ import org.apache.hadoop.util.ToolRunner;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+import java.io.IOException;
+
 
 public class ObservedFrequency  extends Configured implements Tool {
     private static final Logger logger = LogManager.getLogger(ObservedFrequency.class);
+
+    public static class Mapper1 extends Mapper<Object, Text, IntTextPair, IntWritable> {
+        private IntWritable ansVal = new IntWritable();
+
+        @Override
+        public void map(final Object key, final Text value, final Mapper.Context context) throws IOException, InterruptedException {
+            String link[] = value.toString().split(",");
+            IntTextPair ansKey = new IntTextPair();
+            ansVal.set(Integer.parseInt(link[link.length-1]));
+            for(int i = 0; i < link.length-1; i++){
+                ansKey.set(i, link[i]);
+                context.write(ansKey, ansVal);
+            }
+        }
+    }
 
     @Override
     public int run(final String[] args) throws Exception {
