@@ -7,6 +7,7 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.Tool;
@@ -15,6 +16,8 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class ObservedFrequency  extends Configured implements Tool {
@@ -35,15 +38,46 @@ public class ObservedFrequency  extends Configured implements Tool {
         }
     }
 
+    public static class Reducer1 extends Reducer<IntTextPair, IntWritable, Text, IntWritable> {
+        private final IntWritable result = new IntWritable();
+        private final Text ansKey = new Text();
+
+        @Override
+        public void reduce(final IntTextPair key, final Iterable<IntWritable> values, final Context context) throws IOException, InterruptedException {
+            HashMap<Integer, Integer> delayCount = new HashMap<>();
+
+            for (final IntWritable val : values) {
+                if(delayCount.containsKey(val.get())){
+                    delayCount.put(val.get(), delayCount.get(val.get())+1);
+                }
+                else{
+                    delayCount.put(val.get(), 1);
+                }
+            }
+            String ans = key.toString();
+            for(Map.Entry<Integer, Integer> entry: delayCount.entrySet()){
+                ansKey.set(ans + "," + entry.getKey());
+                result.set(entry.getValue());
+                context.write(ansKey, result);
+            }
+        }
+    }
+
     @Override
     public int run(final String[] args) throws Exception {
-
         final Configuration conf = getConf();
         final Job job = Job.getInstance(conf, "Categorical Attributes Frequencies With Delay");
         job.setJarByClass(ObservedFrequency.class);
         final Configuration jobConf = job.getConfiguration();
         // Sets output delimeter for each line
         jobConf.set("mapreduce.output.textoutputformat.separator", ",");
+
+        job.setMapperClass(Mapper1.class);
+        job.setReducerClass(Reducer1.class);
+        job.setMapOutputKeyClass(IntTextPair.class);
+        job.setMapOutputValueClass(IntWritable.class);
+        job.setOutputKeyClass(Text. class);
+        job.setOutputValueClass(IntWritable.class);
 
         // FileInputFormat takes up TextInputFormat as default
         FileInputFormat.addInputPath(job, new Path(args[0]));
