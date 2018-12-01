@@ -30,19 +30,54 @@ public class Normalizer extends Configured implements Tool {
             String[] fieldVals = dataStr.split(",");
 
             String year = fieldVals[0];
-            String month = fieldVals[1];
-            String dayOfMonth = fieldVals[2];
-            String dayOfWeek = fieldVals[3];
-            String carrier = fieldVals[4];
-            String originAirport = fieldVals[5];
-            String destAirport = fieldVals[6];
-            String departTime = fieldVals[7];
-            String departDelay = fieldVals[8];
-            String arriveTime = fieldVals[9];
-            String arriveDelay = fieldVals[10];
-            String schecduledFlightTime = fieldVals[11];
-            String distance = fieldVals[12];
 
+            String month = fieldVals[1];
+            float m = Float.parseFloat(month);
+            m = (float) ((m - 1.0)/(12.0 - 1.0));
+            month = m + "";
+
+            String dayOfMonth = fieldVals[2];
+            float d = Float.parseFloat(dayOfMonth);
+            d = (float) ((d - 1.0)/(31.0 - 1.0));
+            dayOfMonth = d + "";
+
+            String dayOfWeek = fieldVals[3];
+            float dw = Float.parseFloat(dayOfWeek);
+            dw = (float) ((dw - 1.0)/(7.0 - 1.0));
+            dayOfWeek = dw + "";
+
+            String carrier = fieldVals[4];
+            float c = Float.parseFloat(carrier);
+            c = (float) ((c - 1.0)/(18.0 - 1.0));
+            carrier = c + "";
+
+            String originAirport = fieldVals[5];
+            float oa = Float.parseFloat(originAirport);
+            oa = (float) ((oa - 1.0)/(358.0 - 1.0));
+            originAirport = oa + "";
+
+            String destAirport = fieldVals[6];
+            float da = Float.parseFloat(destAirport);
+            da = (float) ((da - 1.0)/(358.0 - 1.0));
+            destAirport = da + "";
+
+            String departTime = fieldVals[7];
+            float dt = Float.parseFloat(departTime);
+            dt = (float) ((dt - 0.0)/(23.0 - 0.0));
+            departTime = dt + "";
+
+            String departDelay = fieldVals[8];
+
+            String arriveTime = fieldVals[9];
+            float at = Float.parseFloat(arriveTime);
+            at = (float) ((at - 0.0)/(23.0 - 0.0));
+            arriveTime = at + "";
+
+            String arriveDelay = fieldVals[10];
+            
+            String schecduledFlightTime = fieldVals[11];
+            
+            String distance = fieldVals[12];
             float dist = Float.parseFloat(distance);
             dist = (dist - min)/(max - min);
             distance = dist + "";
@@ -83,11 +118,11 @@ public class Normalizer extends Configured implements Tool {
         job.setJarByClass(normalize.Normalizer.class);
         final Configuration jobConf = job.getConfiguration();
         jobConf.set("mapreduce.output.textoutputformat.separator", ",");
-        // Delete output directory, only to ease local development; will not work on AWS. ===========
-        final FileSystem fileSystem = FileSystem.get(conf);
-        if (fileSystem.exists(new Path(args[1]))) {
-            fileSystem.delete(new Path(args[1]), true);
-        }
+                // Delete output directory, only to ease local development; will not work on AWS. ===========
+//        final FileSystem fileSystem = FileSystem.get(conf);
+//        if (fileSystem.exists(new Path(args[1]))) {
+//            fileSystem.delete(new Path(args[1]), true);
+//        }
         // ================
         job.setMapperClass(NormalizerMapper.class);
         job.setMapOutputKeyClass(NullWritable.class);
