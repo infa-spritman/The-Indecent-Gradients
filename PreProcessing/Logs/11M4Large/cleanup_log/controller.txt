@@ -1,0 +1,57 @@
+2018-12-01T01:41:59.594Z INFO Ensure step 2 jar file s3://charmik-mr-bucket/data-cleanup-1.0.jar
+2018-12-01T01:42:01.178Z INFO StepRunner: Created Runner for step 2
+INFO startExec 'hadoop jar /mnt/var/lib/hadoop/steps/s-1BX7JNHAGECHE/data-cleanup-1.0.jar cleanup.Cleanup s3://charmik-mr-bucket/flight_data s3://charmik-mr-bucket/clean_data'
+INFO Environment:
+  PATH=/sbin:/usr/sbin:/bin:/usr/bin:/usr/local/sbin:/opt/aws/bin
+  LESS_TERMCAP_md=[01;38;5;208m
+  LESS_TERMCAP_me=[0m
+  HISTCONTROL=ignoredups
+  LESS_TERMCAP_mb=[01;31m
+  AWS_AUTO_SCALING_HOME=/opt/aws/apitools/as
+  UPSTART_JOB=rc
+  LESS_TERMCAP_se=[0m
+  HISTSIZE=1000
+  HADOOP_ROOT_LOGGER=INFO,DRFA
+  JAVA_HOME=/etc/alternatives/jre
+  AWS_DEFAULT_REGION=us-east-1
+  AWS_ELB_HOME=/opt/aws/apitools/elb
+  LESS_TERMCAP_us=[04;38;5;111m
+  EC2_HOME=/opt/aws/apitools/ec2
+  TERM=linux
+  runlevel=3
+  LANG=en_US.UTF-8
+  AWS_CLOUDWATCH_HOME=/opt/aws/apitools/mon
+  MAIL=/var/spool/mail/hadoop
+  LESS_TERMCAP_ue=[0m
+  LOGNAME=hadoop
+  PWD=/
+  LANGSH_SOURCED=1
+  HADOOP_CLIENT_OPTS=-Djava.io.tmpdir=/mnt/var/lib/hadoop/steps/s-1BX7JNHAGECHE/tmp
+  _=/etc/alternatives/jre/bin/java
+  CONSOLETYPE=serial
+  RUNLEVEL=3
+  LESSOPEN=||/usr/bin/lesspipe.sh %s
+  previous=N
+  UPSTART_EVENTS=runlevel
+  AWS_PATH=/opt/aws
+  USER=hadoop
+  UPSTART_INSTANCE=
+  PREVLEVEL=N
+  HADOOP_LOGFILE=syslog
+  HOSTNAME=ip-172-31-58-177
+  HADOOP_LOG_DIR=/mnt/var/log/hadoop/steps/s-1BX7JNHAGECHE
+  EC2_AMITOOL_HOME=/opt/aws/amitools/ec2
+  SHLVL=5
+  HOME=/home/hadoop
+  HADOOP_IDENT_STRING=hadoop
+INFO redirectOutput to /mnt/var/log/hadoop/steps/s-1BX7JNHAGECHE/stdout
+INFO redirectError to /mnt/var/log/hadoop/steps/s-1BX7JNHAGECHE/stderr
+INFO Working dir /mnt/var/lib/hadoop/steps/s-1BX7JNHAGECHE
+INFO ProcessRunner started child process 8455 :
+hadoop    8455  4821  0 01:42 ?        00:00:00 bash /usr/lib/hadoop/bin/hadoop jar /mnt/var/lib/hadoop/steps/s-1BX7JNHAGECHE/data-cleanup-1.0.jar cleanup.Cleanup s3://charmik-mr-bucket/flight_data s3://charmik-mr-bucket/clean_data
+2018-12-01T01:42:03.265Z INFO HadoopJarStepRunner.Runner: startRun() called for s-1BX7JNHAGECHE Child Pid: 8455
+INFO Synchronously wait child process to complete : hadoop jar /mnt/var/lib/hadoop/steps/s-1BX7JNHA...
+INFO waitProcessCompletion ended with exit code 0 : hadoop jar /mnt/var/lib/hadoop/steps/s-1BX7JNHA...
+INFO total process run time: 76 seconds
+2018-12-01T01:43:17.573Z INFO Step created jobs: job_1543628387961_0001
+2018-12-01T01:43:17.574Z INFO Step succeeded with exitCode 0 and took 76 seconds
