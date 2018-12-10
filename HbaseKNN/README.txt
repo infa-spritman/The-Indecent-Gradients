@@ -27,7 +27,7 @@ export JAVA_HOME=/usr/lib/jvm/java-8-oracle
 Execution
 ---------
 All of the build & execution commands are organized in the Makefile.
-1) Unzip project file.
+1) Unzip project file
 2) Create a folder named "Twitter-dataset" inside given "input" folder.
 3) Create a folder "nodes" inside "Twitter-dataset" folder and copy "nodes.csv" in it.
 4) Create a folder "edges" inside "Twitter-dataset" folder and copy "edges.csv" in it.
