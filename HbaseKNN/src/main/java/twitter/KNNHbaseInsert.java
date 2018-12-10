@@ -84,7 +84,7 @@ public class KNNHbaseInsert extends Configured implements Tool {
 
 			Put put = new Put(Bytes.add(Bytes.toBytes(distance), Bytes.toBytes(departTIme)));
 			AtomicReference<String> prefix = new AtomicReference<>("");
-//			sb.append(distance + "," + departTIme + "," + distance + "" + departTIme + ",");
+			sb.append(distance + "," + departTIme + "," + distance + "" + departTIme + ",");
 			delayGroupCount.forEach( (k,v) -> {
 			    sb.append(prefix.get());
                 prefix.set(",");
