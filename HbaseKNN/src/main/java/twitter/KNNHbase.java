@@ -78,7 +78,7 @@ public class KNNHbase extends Configured implements Tool {
 
             }
 
-            //
+            // Added comments
 
             long offsetTop = ldistance;
             long offsetBottom = ldistance;
