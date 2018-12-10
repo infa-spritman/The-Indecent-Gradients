@@ -59,9 +59,9 @@ public class KNNHbase extends Configured implements Tool {
         @Override
         public void map(final Object key, final Text value, final Context context) throws IOException, InterruptedException {
 
-//            Scan scan = new Scan();
-//            scan.setCaching(500);        // 1 is the default in Scan, which will be bad for MapReduce jobs
-//            scan.setCacheBlocks(false);
+           Scan scan = new Scan();
+           scan.setCaching(500);        // 1 is the default in Scan, which will be bad for MapReduce jobs
+           scan.setCacheBlocks(false);
             // Parsing on comma
             final String[] row = value.toString().split(",");
             Double distance = Double.parseDouble(row[12]);
